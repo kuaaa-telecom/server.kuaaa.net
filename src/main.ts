@@ -19,7 +19,6 @@ async function bootstrap() {
     .setTitle('server.kuaaa.net')
     .setDescription('KUAAA API description')
     .setVersion('1.0')
-    .addTag('KUAAA')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
