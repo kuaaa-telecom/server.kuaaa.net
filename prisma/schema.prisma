@@ -9,3 +9,13 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Major {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String   @db.VarChar(16)
+  college   String   @db.VarChar(16)
+
+  @@map("major")
+}
