@@ -11,18 +11,19 @@ datasource db {
 }
 
 model Member {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  accountId  String   @unique @map("account_id")
-  password   String
-  type       UserType @default(NOVICE)
-  name       String   @db.VarChar(16)
-  email      String
-  generation Int
-  studentId  String   @map("student_id") @db.VarChar(16)
-  majorId    Int      @map("major_id")
-  isActive   Boolean  @default(true) @map("is_active")
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  accountId    String   @unique @map("account_id")
+  password     String
+  type         UserType @default(NOVICE)
+  name         String
+  email        String   @unique
+  generation   Int
+  studentId    String   @map("student_id")
+  majorId      Int      @map("major_id")
+  registeredAt DateTime @map("registered_at") @db.Date
+  isActive     Boolean  @default(true) @map("is_active")
 
   major      Major        @relation(fields: [majorId], references: [id])
   serve      Serve[]
@@ -36,8 +37,8 @@ model Major {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  name      String   @db.VarChar(16)
-  college   String   @db.VarChar(16)
+  name      String
+  college   String
 
   member Member[]
 
@@ -49,7 +50,7 @@ model Serve {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   memberId  String   @map("member_id")
-  position  String   @db.VarChar(16)
+  position  String
   year      Int
   semester  Int
 
@@ -68,7 +69,7 @@ model Event {
   description String?
   type        EventType
   startTime   DateTime     @map("start_time")
-  endTime     DateTime     @map("end_time")
+  endTime     DateTime?    @map("end_time")
   Attendance  Attendance[]
 
   @@map("event")
@@ -120,8 +121,8 @@ model Ticket {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   memberId  String   @map("member_id")
-  startDate DateTime @map("start_date") @db.Date
-  endDate   DateTime @map("end_date") @db.Date
+  startTime DateTime @map("start_time")
+  endTime   DateTime @map("end_time")
   purpose   String
 
   member Member   @relation(fields: [memberId], references: [id])
