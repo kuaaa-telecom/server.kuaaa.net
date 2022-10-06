@@ -1,0 +1,202 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Member {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  accountId    String   @unique @map("account_id")
+  password     String
+  type         UserType @default(NOVICE)
+  name         String
+  email        String   @unique
+  generation   Int
+  studentId    String   @map("student_id")
+  majorId      Int      @map("major_id")
+  registeredAt DateTime @map("registered_at") @db.Date
+  isActive     Boolean  @default(true) @map("is_active")
+
+  major      Major        @relation(fields: [majorId], references: [id])
+  serve      Serve[]
+  Attendance Attendance[]
+  Ticket     Ticket[]
+
+  @@map("member")
+}
+
+model Major {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  college   String
+
+  member Member[]
+
+  @@map("major")
+}
+
+model Serve {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  memberId  String   @map("member_id")
+  position  String
+  year      Int
+  semester  Int
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@map("serve")
+}
+
+model Event {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  name        String
+  year        Int
+  month       Int
+  description String?
+  type        EventType
+  startTime   DateTime     @map("start_time")
+  endTime     DateTime?    @map("end_time")
+  Attendance  Attendance[]
+
+  @@map("event")
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  memberId  String   @map("member_id")
+  eventId   Int      @map("event_id")
+
+  member Member @relation(fields: [memberId], references: [id])
+  event  Event  @relation(fields: [eventId], references: [id])
+
+  @@map("attendance")
+}
+
+model Equipment {
+  id          Int             @id @default(autoincrement())
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  name        String
+  type        EquipmentType
+  status      EquipmentStatus
+  casingId    Int             @map("casing_id")
+  description String?
+
+  casing Casing   @relation(fields: [casingId], references: [id])
+  Rental Rental[]
+
+  @@map("equipment")
+}
+
+model Casing {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  name      String
+  place     String
+
+  Equipment Equipment[]
+
+  @@map("casing")
+}
+
+model Ticket {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  memberId  String   @map("member_id")
+  startTime DateTime @map("start_time")
+  endTime   DateTime @map("end_time")
+  purpose   String
+
+  member Member   @relation(fields: [memberId], references: [id])
+  Rental Rental[]
+
+  @@map("ticket")
+}
+
+model Rental {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  equipmentId Int          @map("equipment_id")
+  ticketId    Int          @map("ticket_id")
+  status      RentalStatus
+
+  equipment Equipment @relation(fields: [equipmentId], references: [id])
+  ticket    Ticket    @relation(fields: [ticketId], references: [id])
+
+  @@map("rental")
+}
+
+enum UserType {
+  NOVICE // 준회원
+  ASSOCIATE // 부회원
+  REGULAR // 정회원
+  HONORARY // 명예회원
+  EXECUTIVE // 임원
+  PRESIDENT // 회장
+  KUAAATELECOM // 쿠아텔레콤
+
+  @@map("user_type")
+}
+
+enum EventType {
+  CONFERENCE // 총회
+  OBSERVATION // 관측회
+  REGULAR // 일반 행사
+  ETC // 기타 행사 (정회원 요건 포함 안됨)
+
+  @@map("event_type")
+}
+
+enum EquipmentType {
+  TRIPOD // 삼각대
+  MOUNT // 가대
+  TELESCOPE // 경통
+  EYEPIECE // 아이피스
+  BINOCULARS // 쌍안경
+  FILTER // 필터
+  CAMERA // 카메라
+  LENS // 렌즈
+  BATTERY // 배터리
+  ETC // 기타
+
+  @@map("equipment_type")
+}
+
+enum EquipmentStatus {
+  ACTIVE // 잘 사용중
+  MISSING // 사라짐
+  INJURED // 파손 (수리 필요)
+  RETIRED // 퇴역
+
+  @@map("equipment_status")
+}
+
+enum RentalStatus {
+  PENDING // 임원진 승인 전
+  ONGOING // 승인 후
+  CHECKING // 반납 후
+  EXCEPTION // 잃어버려서 확인중
+  EXPIRED // 반납 확인후
+
+  @@map("rental_status")
+}
