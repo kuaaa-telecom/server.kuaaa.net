@@ -27,7 +27,7 @@ export async function insertCasing() {
 
 export async function insertEquipment() {
   const csvPath = path.resolve(__dirname, 'equipment.csv');
-  const headers = ['name', 'place'];
+  const headers = ['name', 'type', 'status', 'casingId', 'description'];
   const content = fs.readFileSync(csvPath, { encoding: 'utf-8' });
   parse(
     content,
