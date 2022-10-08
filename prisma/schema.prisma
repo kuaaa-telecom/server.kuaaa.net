@@ -12,19 +12,19 @@ datasource db {
 }
 
 model Member {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  studentId    String   @unique @map("student_id")
+  id           String     @id @default(uuid())
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  studentId    String     @unique @map("student_id")
   name         String
-  type         UserType @default(NOVICE)
+  type         MemberType @default(NOVICE)
   email        String?
   address      String?
   phone        String?
   generation   Int
-  majorId      Int      @map("major_id")
-  registeredAt DateTime @map("registered_at") @db.Date
-  isActive     Boolean  @default(true) @map("is_active")
+  majorId      Int        @map("major_id")
+  registeredAt DateTime   @map("registered_at") @db.Date
+  isActive     Boolean    @default(true) @map("is_active")
 
   major         Major          @relation(fields: [majorId], references: [id])
   serve         Serve[]
@@ -160,7 +160,7 @@ model Rental {
   @@map("rental")
 }
 
-enum UserType {
+enum MemberType {
   NOVICE // 준회원
   ASSOCIATE // 부회원
   REGULAR // 정회원
@@ -169,7 +169,7 @@ enum UserType {
   PRESIDENT // 회장
   KUAAATELECOM // 쿠아텔레콤
 
-  @@map("user_type")
+  @@map("member_type")
 }
 
 enum EventType {
