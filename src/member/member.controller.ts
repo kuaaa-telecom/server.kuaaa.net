@@ -14,9 +14,9 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateResultDto } from './dto/create-result.dto';
-import { CreateMembersPayload } from './payload/create-members.payload';
-import { UpdateMemberPayload } from './payload/update-member.payload';
+import { CreateResultDto } from './common/dto/create-result.dto';
+import { CreateMembersPayload } from './common/payload/create-members.payload';
+import { UpdateMemberPayload } from './common/payload/update-member.payload';
 
 @ApiTags('Member API')
 @Controller('api/members')
