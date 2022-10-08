@@ -3,9 +3,13 @@
 
   - You are about to drop the column `account_id` on the `member` table. All the data in the column will be lost.
   - You are about to drop the column `password` on the `member` table. All the data in the column will be lost.
+  - The `type` column on the `member` table would be dropped and recreated. This will lead to data loss if there is data in the column.
   - A unique constraint covering the columns `[student_id]` on the table `member` will be added. If there are existing duplicate values, this will fail.
 
 */
+-- CreateEnum
+CREATE TYPE "member_type" AS ENUM ('NOVICE', 'ASSOCIATE', 'REGULAR', 'HONORARY', 'EXECUTIVE', 'PRESIDENT', 'KUAAATELECOM');
+
 -- DropIndex
 DROP INDEX "member_account_id_key";
 
@@ -17,7 +21,12 @@ ALTER TABLE "member" DROP COLUMN "account_id",
 DROP COLUMN "password",
 ADD COLUMN     "address" TEXT,
 ADD COLUMN     "phone" TEXT,
+DROP COLUMN "type",
+ADD COLUMN     "type" "member_type" NOT NULL DEFAULT 'NOVICE',
 ALTER COLUMN "email" DROP NOT NULL;
+
+-- DropEnum
+DROP TYPE "user_type";
 
 -- CreateTable
 CREATE TABLE "member_account" (
