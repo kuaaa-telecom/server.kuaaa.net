@@ -8,7 +8,3 @@ type CreateMemberData = {
   phone: string | null;
   address: string | null;
 };
-
-export type CreateMembersData = {
-  members: CreateMemberData[];
-};

@@ -1,7 +1,10 @@
-import { MemberDomain } from '../member.domain';
-import { CreateMembersData } from '../type/create-member-data.type';
+import { MemberDomainData } from '../type/member-domain-data.type';
 
 export interface IMemberRepository {
-  getMemberById(id: string): Promise<MemberDomain | null>;
-  createMembers(data: CreateMembersData): Promise<MemberDomain[]>;
+  getMemberById(id: string): Promise<MemberDomainData | null>;
+  createMembers(members: CreateMemberData[]): Promise<MemberDomainData[]>;
+  recreateMemberByStudentId(
+    members: CreateMemberData[],
+  ): Promise<MemberDomainData[]>;
+  getMembersActiveInfo(studentIds: string[]): Promise<MemberActiveInfo[]>;
 }
