@@ -3,6 +3,7 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -29,14 +30,17 @@ class MemberPayload {
   @ApiProperty({ description: '가입일자' })
   registeredAt!: string;
 
+  @IsOptional()
   @IsString()
   @ApiPropertyOptional({ description: '이메일', nullable: true })
   email?: string | null;
 
+  @IsOptional()
   @IsString()
   @ApiPropertyOptional({ description: '전화번호', nullable: true })
   phone?: string | null;
 
+  @IsOptional()
   @IsString()
   @ApiPropertyOptional({ description: '주소', nullable: true })
   address?: string | null;
