@@ -6,32 +6,46 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Member {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  accountId    String   @unique @map("account_id")
-  password     String
-  type         UserType @default(NOVICE)
+  id           String     @id @default(uuid())
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  studentId    String     @unique @map("student_id")
   name         String
-  email        String   @unique
+  type         MemberType @default(NOVICE)
+  email        String?
+  address      String?
+  phone        String?
   generation   Int
-  studentId    String   @map("student_id")
-  majorId      Int      @map("major_id")
-  registeredAt DateTime @map("registered_at") @db.Date
-  isActive     Boolean  @default(true) @map("is_active")
+  majorId      Int        @map("major_id")
+  registeredAt DateTime   @map("registered_at") @db.Date
+  isActive     Boolean    @default(true) @map("is_active")
 
-  major      Major        @relation(fields: [majorId], references: [id])
-  serve      Serve[]
-  Attendance Attendance[]
-  Ticket     Ticket[]
+  major         Major          @relation(fields: [majorId], references: [id])
+  serve         Serve[]
+  attendance    Attendance[]
+  ticket        Ticket[]
+  memberAccount MemberAccount?
 
   @@map("member")
+}
+
+model MemberAccount {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  memberId  String   @unique @map("member_id")
+  nickname  String
+  password  String
+
+  member Member @relation(fields: [memberId], references: [id])
+
+  @@map("member_account")
 }
 
 model Major {
@@ -71,7 +85,7 @@ model Event {
   type        EventType
   startTime   DateTime     @map("start_time")
   endTime     DateTime?    @map("end_time")
-  Attendance  Attendance[]
+  attendance  Attendance[]
 
   @@map("event")
 }
@@ -100,7 +114,7 @@ model Equipment {
   description String?
 
   casing Casing   @relation(fields: [casingId], references: [id])
-  Rental Rental[]
+  rental Rental[]
 
   @@map("equipment")
 }
@@ -112,7 +126,7 @@ model Casing {
   name      String
   place     String
 
-  Equipment Equipment[]
+  equipment Equipment[]
 
   @@map("casing")
 }
@@ -127,7 +141,7 @@ model Ticket {
   purpose   String
 
   member Member   @relation(fields: [memberId], references: [id])
-  Rental Rental[]
+  rental Rental[]
 
   @@map("ticket")
 }
@@ -146,7 +160,7 @@ model Rental {
   @@map("rental")
 }
 
-enum UserType {
+enum MemberType {
   NOVICE // 준회원
   ASSOCIATE // 부회원
   REGULAR // 정회원
@@ -155,7 +169,7 @@ enum UserType {
   PRESIDENT // 회장
   KUAAATELECOM // 쿠아텔레콤
 
-  @@map("user_type")
+  @@map("member_type")
 }
 
 enum EventType {
