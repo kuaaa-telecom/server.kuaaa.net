@@ -11,7 +11,7 @@ export class MemberDomain {
   studentId!: string;
   generation!: number;
   majorId!: number;
-  registeredAt!: string;
+  registeredAt!: Date;
   email!: string | null;
   phone!: string | null;
   address!: string | null;
@@ -33,7 +33,7 @@ export class MemberDomain {
   }
 
   // 나중에 다른 엔드포인트로 접근하는 경우 UpdateMemberPayload를 그대로 쓰는게 아니라 새로운 type을 만들어야 할듯.
-  async updateMember(data: UpdateMemberPayload): Promise<void> {
+  async updateMember(data: UpdateMemberPayload): Promise<MemberDomain> {
     if (data.studentId) {
       await this.validateStudentId(data.studentId);
     }
@@ -42,29 +42,12 @@ export class MemberDomain {
       await this.validateMajor(data.majorId);
     }
 
-    const updateData: UpdateMemberData = {
-      name: data.name,
-      studentId: data.studentId,
-      generation: Number(data.studentId?.slice(2, 3)),
-      majorId: data.majorId,
-      registeredAt: data.registeredAt,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-    };
-
     // db에 반영
-    await this.memberRepository.updateMember(this.id, updateData);
+    const updatedData: MemberDomainData =
+      await this.memberRepository.updateMember(this.id, data);
 
-    // 업데이트된 데이터를 domain field에 반영
-    this.name = updateData.name ?? this.name;
-    this.studentId = updateData.studentId ?? this.studentId;
-    this.generation = updateData.generation ?? this.generation;
-    this.majorId = updateData.majorId ?? this.majorId;
-    this.registeredAt = updateData.registeredAt ?? this.registeredAt;
-    this.email = updateData.email ?? this.email;
-    this.phone = updateData.phone ?? this.phone;
-    this.address = updateData.address ?? this.address;
+    // 업데이트한 데이터로 domain을 새로 만들어서 반환
+    return new MemberDomain(this.memberRepository, updatedData);
   }
 
   // 이후 auth 추가되면, auth가 있는 경우는 어떻게 할지 정책을 정해야 할 필요가 있음.

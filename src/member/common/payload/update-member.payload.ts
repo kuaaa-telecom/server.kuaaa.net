@@ -1,5 +1,6 @@
-import { IsDateString, IsInt, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsInt, IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class UpdateMemberPayload {
   @IsString()
@@ -14,9 +15,10 @@ export class UpdateMemberPayload {
   @ApiPropertyOptional({ description: '전공ID' })
   majorId?: number;
 
-  @IsDateString()
+  @IsDate()
+  @Transform(({ value }) => new Date(value))
   @ApiPropertyOptional({ description: '가입일자' })
-  registeredAt?: string;
+  registeredAt?: Date;
 
   @IsOptional()
   @IsString()

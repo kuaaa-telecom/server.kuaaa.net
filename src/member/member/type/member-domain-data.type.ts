@@ -7,9 +7,8 @@ export type MemberDomainData = {
   studentId: string;
   generation: number;
   majorId: number;
-  registeredAt: string;
+  registeredAt: Date;
   email: string | null;
   phone: string | null;
   address: string | null;
-  isActive: boolean;
 };

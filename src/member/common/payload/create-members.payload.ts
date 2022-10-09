@@ -1,6 +1,6 @@
 import {
   IsArray,
-  IsDateString,
+  IsDate,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -8,8 +8,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
-class MemberPayload {
+export class CreateMemberPayload {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ description: '이름' })
@@ -26,9 +27,10 @@ class MemberPayload {
   majorId!: number;
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
+  @Transform(({ value }) => new Date(value))
   @ApiProperty({ description: '가입일자' })
-  registeredAt!: string;
+  registeredAt!: Date;
 
   @IsOptional()
   @IsString()
@@ -51,5 +53,5 @@ export class CreateMembersPayload {
   @IsArray()
   @ValidateNested({ each: true })
   @ApiProperty({ description: '등록 멤버 list' })
-  members!: MemberPayload[];
+  members!: CreateMemberPayload[];
 }
