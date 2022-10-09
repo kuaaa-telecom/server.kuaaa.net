@@ -3,7 +3,7 @@ import { PrismaService } from '../../common/services/prisma.service';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { MemberDomainData } from './type/member-domain-data.type';
 import { Major, Prisma } from '@prisma/client';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { UpdateMemberPayload } from '../common/payload/update-member.payload';
 import { CreateMemberPayload } from '../common/payload/create-members.payload';
 
@@ -46,7 +46,7 @@ export class MemberRepository implements IMemberRepository {
     const members: CreateMemberData[] = data.map((member) => ({
       name: member.name,
       studentId: member.studentId,
-      generation: Number(member.studentId.slice(2, 3)),
+      generation: Number(member.studentId.slice(2, 4)),
       majorId: member.majorId,
       registeredAt: member.registeredAt,
       email: member.email ?? null,
@@ -98,7 +98,9 @@ export class MemberRepository implements IMemberRepository {
       data: {
         name: data.name,
         studentId: data.studentId,
-        generation: Number(data.studentId?.slice(2, 3)),
+        generation: data.studentId
+          ? Number(data.studentId.slice(2, 4))
+          : undefined,
         majorId: data.majorId,
         registeredAt: data.registeredAt,
         email: data.email,
@@ -117,7 +119,7 @@ export class MemberRepository implements IMemberRepository {
   }
 
   async getMajor(majorId: number): Promise<Major | null> {
-    return this.prisma.major.findFirst({
+    return this.prisma.major.findUnique({
       where: { id: majorId },
     });
   }

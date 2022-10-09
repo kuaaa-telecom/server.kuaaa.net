@@ -9,9 +9,10 @@ import {
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import {
+  ApiCreatedResponse,
   ApiNoContentResponse,
-  ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateResultDto } from './common/dto/create-result.dto';
@@ -25,27 +26,31 @@ export class MemberController {
 
   @Post()
   @ApiOperation({ summary: '회원 명부에 여러 회원들을 등록합니다.' })
-  @ApiOkResponse({ type: CreateResultDto })
+  @ApiCreatedResponse({ type: CreateResultDto })
   async createMembers(
     @Body() payload: CreateMembersPayload,
   ): Promise<CreateResultDto> {
     return this.memberService.createMembers(payload);
   }
 
-  @Patch(':id')
+  @Patch(':memberId')
   @ApiOperation({ summary: '해당 회원의 정보를 수정합니다.' })
+  @ApiParam({ name: 'memberId', type: 'string' })
   @ApiNoContentResponse()
   async updateMember(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('memberId', ParseUUIDPipe) id: string,
     @Body() payload: UpdateMemberPayload,
   ): Promise<void> {
     await this.memberService.updateMember(id, payload);
   }
 
-  @Delete(':id')
+  @Delete(':memberId')
   @ApiOperation({ summary: '해당 회원의 정보를 삭제합니다.' })
+  @ApiParam({ name: 'memberId', type: 'string', format: 'uuid' })
   @ApiNoContentResponse()
-  async deleteMember(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+  async deleteMember(
+    @Param('memberId', ParseUUIDPipe) id: string,
+  ): Promise<void> {
     await this.memberService.deleteMember(id);
   }
 }

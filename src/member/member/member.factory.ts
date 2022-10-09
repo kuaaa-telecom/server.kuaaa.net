@@ -8,7 +8,7 @@ import { CreateMembersPayload } from '../common/payload/create-members.payload';
 import { MemberDomain } from './member.domain';
 import { IMemberRepository } from './interface/member.repository.interface';
 import { MemberDomainData } from './type/member-domain-data.type';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable()
 export class MemberFactory {
@@ -32,7 +32,7 @@ export class MemberFactory {
     // 학번 중복 체크
     const memberStudentIds = data.members.map(({ studentId }) => studentId);
     if (_.uniq(memberStudentIds).length !== memberStudentIds.length)
-      throw new BadRequestException('중복된 학번이 있습니다.');
+      throw new BadRequestException('요청에 중복된 학번이 있습니다.');
 
     const membersData: MemberDomainData[] =
       await this.memberRepository.createMembers(data.members);
