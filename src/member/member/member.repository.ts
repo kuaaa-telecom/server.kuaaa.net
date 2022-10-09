@@ -1,8 +1,8 @@
 import { IMemberRepository } from './interface/member.repository.interface';
 import { PrismaService } from '../../common/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateMembersData } from './type/create-member-data.type';
 import { MemberDomainData } from './type/member-domain-data.type';
+import { Major } from '@prisma/client';
 
 @Injectable()
 export class MemberRepository implements IMemberRepository {
@@ -12,7 +12,35 @@ export class MemberRepository implements IMemberRepository {
     return {} as MemberDomainData;
   }
 
-  async createMembers(data: CreateMembersData): Promise<MemberDomainData[]> {
-    return [];
+  async createMembers(
+    members: CreateMemberData[],
+  ): Promise<MemberDomainData[]> {
+    return Promise.resolve([]);
+  }
+
+  async getMembersActiveInfo(
+    studentIds: string[],
+  ): Promise<MemberActiveInfo[]> {
+    return Promise.resolve([]);
+  }
+
+  async recreateMemberByStudentId(
+    members: CreateMemberData[],
+  ): Promise<MemberDomainData[]> {
+    return Promise.resolve([]);
+  }
+
+  async updateMember(id: string, member: UpdateMemberData): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
+  async getMajor(majorId: number): Promise<Major | null> {
+    return Promise.resolve(null);
+  }
+
+  async getMemberByStudentId(
+    studentId: string,
+  ): Promise<MemberDomainData | null> {
+    return Promise.resolve(null);
   }
 }
