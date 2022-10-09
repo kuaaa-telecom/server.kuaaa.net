@@ -15,7 +15,6 @@ export class MemberDomain {
   email!: string | null;
   phone!: string | null;
   address!: string | null;
-  isActive!: boolean;
 
   constructor(
     private readonly memberRepository: IMemberRepository,
@@ -31,7 +30,6 @@ export class MemberDomain {
     this.email = data.email;
     this.phone = data.phone;
     this.address = data.address;
-    this.isActive = data.isActive;
   }
 
   // 나중에 다른 엔드포인트로 접근하는 경우 UpdateMemberPayload를 그대로 쓰는게 아니라 새로운 type을 만들어야 할듯.
@@ -67,6 +65,11 @@ export class MemberDomain {
     this.email = updateData.email ?? this.email;
     this.phone = updateData.phone ?? this.phone;
     this.address = updateData.address ?? this.address;
+  }
+
+  // 이후 auth 추가되면, auth가 있는 경우는 어떻게 할지 정책을 정해야 할 필요가 있음.
+  async deleteMember(): Promise<void> {
+    await this.memberRepository.deleteMember(this.id);
   }
 
   private async validateStudentId(studentId: string): Promise<void> {

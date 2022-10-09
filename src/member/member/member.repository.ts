@@ -34,6 +34,10 @@ export class MemberRepository implements IMemberRepository {
     return Promise.resolve(undefined);
   }
 
+  async deleteMember(id: string): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
   async getMajor(majorId: number): Promise<Major | null> {
     return Promise.resolve(null);
   }

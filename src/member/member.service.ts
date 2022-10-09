@@ -19,10 +19,10 @@ export class MemberService {
   async updateMember(id: string, payload: UpdateMemberPayload): Promise<void> {
     const member = await this.memberFactory.getMemberById(id);
     await member.updateMember(payload);
-    return;
   }
 
   async deleteMember(id: string): Promise<void> {
-    return;
+    const member = await this.memberFactory.getMemberById(id);
+    await member.deleteMember();
   }
 }

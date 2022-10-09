@@ -10,5 +10,6 @@ export interface IMemberRepository {
   ): Promise<MemberDomainData[]>;
   getMembersActiveInfo(studentIds: string[]): Promise<MemberActiveInfo[]>;
   updateMember(id: string, member: UpdateMemberData): Promise<void>;
+  deleteMember(id: string): Promise<void>;
   getMajor(majorId: number): Promise<Major | null>;
 }
