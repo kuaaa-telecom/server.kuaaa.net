@@ -19,7 +19,7 @@ export class MemberFactory {
       throw new NotFoundException(`Member Id: ${memberId}를 찾을 수 없습니다.`);
     }
 
-    return new MemberDomain(memberData);
+    return new MemberDomain(this.memberRepository, memberData);
   }
 
   async createMembers(data: CreateMembersPayload): Promise<MemberDomain[]> {

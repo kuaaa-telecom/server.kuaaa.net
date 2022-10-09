@@ -1,5 +1,6 @@
 import { MemberType } from '@prisma/client';
 import { MemberDomainData } from './type/member-domain-data.type';
+import { IMemberRepository } from './interface/member.repository.interface';
 
 export class MemberDomain {
   id!: string;
@@ -14,7 +15,10 @@ export class MemberDomain {
   address!: string | null;
   isActive!: boolean;
 
-  constructor(data: MemberDomainData) {
+  constructor(
+    private readonly memberRepository: IMemberRepository,
+    data: MemberDomainData,
+  ) {
     this.id = data.id;
     this.name = data.name;
     this.type = data.type;
