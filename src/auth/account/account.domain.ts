@@ -7,7 +7,10 @@ export class AccountDomain {
   name!: string;
   nickname!: string;
 
-  constructor(data: AccountDomainData) {
+  constructor(
+    private readonly passwordService: IPasswordService,
+    data: AccountDomainData,
+  ) {
     this.memberId = data.memberId;
     this.studentId = data.studentId;
     this.password = data.password;
@@ -16,7 +19,6 @@ export class AccountDomain {
   }
 
   async login(password: string): Promise<boolean> {
-    // 비밀번호 비교, 받아온 암호화 서비스에 위탁
-    return true;
+    return this.passwordService.validatePassword(password, this.password);
   }
 }

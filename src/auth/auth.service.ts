@@ -29,7 +29,7 @@ export class AuthService {
 
     const loginResult = await account.login(payload.password);
     if (!loginResult) {
-      new UnauthorizedException('로그인에 실패했습니다.');
+      new UnauthorizedException('학번과 비밀번호가 일치하지 않습니다.');
     }
 
     const token = await this.createAccessToken(account.memberId);

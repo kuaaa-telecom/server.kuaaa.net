@@ -1,8 +1,10 @@
 import { SignupPayload } from '../common/payload/signup.payload';
 import { AccountDomain } from './account.domain';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AccountFactory {
-  constructor() {}
+  constructor(private readonly passwordService: IPasswordService) {}
 
   async getAccountByStudentId(studentId: string): Promise<AccountDomain> {
     // db에서 조회

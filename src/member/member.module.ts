@@ -4,13 +4,13 @@ import { MemberController } from './member.controller';
 import { MemberFactory } from './member/member.factory';
 import { MemberRepository } from './member/member.repository';
 
-const customMemberRepository: ClassProvider = {
+const memberRepository: ClassProvider = {
   provide: 'IMemberRepository',
   useClass: MemberRepository,
 };
 
 @Module({
-  providers: [MemberService, MemberFactory, customMemberRepository],
+  providers: [MemberService, MemberFactory, memberRepository],
   controllers: [MemberController],
 })
 export class MemberModule {}
