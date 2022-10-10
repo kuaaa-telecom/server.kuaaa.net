@@ -1,6 +1,11 @@
 import { SignupPayload } from '../common/payload/signup.payload';
 import { AccountDomain } from './account.domain';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { IAccountRepository } from './interface/account.repository.interface';
 import { AccountDomainData } from './type/account-domain-data.type';
 import { CreateAccountData } from './type/create-account-data.type';
@@ -13,6 +18,17 @@ export class AccountFactory {
     @Inject('IPasswordService')
     private readonly passwordService: IPasswordService,
   ) {}
+
+  async getAccountByMemberId(memberId: string): Promise<AccountDomain | null> {
+    const accountData: AccountDomainData | null =
+      await this.accountRepository.getAccountByMemberId(memberId);
+
+    if (!accountData) {
+      return null;
+    }
+
+    return new AccountDomain(this.passwordService, accountData);
+  }
 
   async getAccountByStudentId(studentId: string): Promise<AccountDomain> {
     const accountData: AccountDomainData | null =
@@ -38,12 +54,21 @@ export class AccountFactory {
         '해당 학번과 이름의 회원 기록이 존재하지 않습니다.',
       );
     }
+
+    // 그 ID로 이미 계정이 있는지 확인
+    const account: AccountDomainData | null =
+      await this.accountRepository.getAccountByMemberId(memberId);
+
+    if (account) {
+      throw new ConflictException('이미 계정이 존재합니다.');
+    }
+
     // 닉네임 중복 validation => 있는지 확인(없어야 함)
     const isMemberExistByNickname: boolean =
       await this.accountRepository.isAccountExistByNickname(data.nickname);
 
     if (isMemberExistByNickname) {
-      throw new NotFoundException('이미 사용 중인 닉네임입니다.');
+      throw new ConflictException('이미 사용 중인 닉네임입니다.');
     }
 
     const createAccountData: CreateAccountData = {

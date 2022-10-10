@@ -6,6 +6,7 @@ import { AccountFactory } from './account/account.factory';
 import { AccountRepository } from './account/account.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './common/strategy/jwt.strategy';
 
 const passwordService: ClassProvider = {
   provide: 'IPasswordService',
@@ -31,7 +32,13 @@ const accountRepository: ClassProvider = {
       }),
     }),
   ],
-  providers: [AuthService, passwordService, AccountFactory, accountRepository],
+  providers: [
+    AuthService,
+    passwordService,
+    AccountFactory,
+    accountRepository,
+    JwtStrategy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
