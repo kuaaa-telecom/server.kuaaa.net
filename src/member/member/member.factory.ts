@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -33,6 +34,16 @@ export class MemberFactory {
     const memberStudentIds = data.members.map(({ studentId }) => studentId);
     if (_.uniq(memberStudentIds).length !== memberStudentIds.length)
       throw new BadRequestException('요청에 중복된 학번이 있습니다.');
+
+    // 이미 존재하는 학번인지 체크
+    const existingMemberStudentIds =
+      await this.memberRepository.getExistingMemberStudentIds(memberStudentIds);
+
+    if (existingMemberStudentIds.length) {
+      throw new ConflictException(
+        `학번: ${existingMemberStudentIds}에 해당하는 데이터가 이미 존재합니다.`,
+      );
+    }
 
     const membersData: MemberDomainData[] =
       await this.memberRepository.createMembers(data.members);

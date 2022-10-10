@@ -12,5 +12,6 @@ export interface IMemberRepository {
     data: UpdateMemberPayload,
   ): Promise<MemberDomainData>;
   deleteMember(id: string): Promise<void>;
+  getExistingMemberStudentIds(studentIds: string[]): Promise<string[]>;
   getMajor(majorId: number): Promise<Major | null>;
 }

@@ -34,7 +34,6 @@ export class MemberDomain {
 
   // 나중에 다른 엔드포인트로 접근하는 경우 UpdateMemberPayload를 그대로 쓰는게 아니라 새로운 type을 만들어야 할듯.
   async updateMember(data: UpdateMemberPayload): Promise<MemberDomain> {
-    console.log(data);
     if (data.studentId) {
       await this.validateStudentId(data.studentId);
     }
@@ -60,7 +59,7 @@ export class MemberDomain {
     const member: MemberDomainData | null =
       await this.memberRepository.getMemberByStudentId(studentId);
 
-    if (member && member.id !== this.id)
+    if (member?.id !== this.id)
       throw new ConflictException('이미 존재하는 학번입니다.');
   }
 
