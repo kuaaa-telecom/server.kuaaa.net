@@ -1,4 +1,5 @@
 import { AccountDomainData } from './type/account-domain-data.type';
+import { MemberType } from '@prisma/client';
 
 export class AccountDomain {
   memberId!: string;
@@ -6,6 +7,7 @@ export class AccountDomain {
   password!: string;
   name!: string;
   nickname!: string;
+  type!: MemberType;
 
   constructor(
     private readonly passwordService: IPasswordService,
@@ -16,6 +18,7 @@ export class AccountDomain {
     this.password = data.password;
     this.name = data.name;
     this.nickname = data.nickname;
+    this.type = data.type;
   }
 
   async login(password: string): Promise<boolean> {

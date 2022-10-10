@@ -6,8 +6,8 @@ export interface IAccountRepository {
   getMemberIdByStudentIdAndName(
     studentId: string,
     name: string,
-  ): Promise<string>;
-  isMemberExistByNickname(nickname: string): Promise<boolean>;
+  ): Promise<string | null>;
+  isAccountExistByNickname(nickname: string): Promise<boolean>;
   createAccount(
     memberId: string,
     data: CreateAccountData,
