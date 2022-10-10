@@ -1,12 +1,21 @@
-import { IsDate, IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsInt,
+  IsOptional,
+  IsString,
+  Length,
+  MinLength,
+} from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
 export class UpdateMemberPayload {
+  @MinLength(1)
   @IsString()
   @ApiPropertyOptional({ description: '이름', type: String })
   name?: string;
 
+  @Length(10, 10)
   @IsString()
   @ApiPropertyOptional({ description: '학번', type: String })
   studentId?: string;
@@ -25,11 +34,13 @@ export class UpdateMemberPayload {
   registeredAt?: Date;
 
   @IsOptional()
+  @MinLength(1)
   @IsString()
   @ApiPropertyOptional({ description: '이메일', nullable: true, type: String })
   email?: string | null;
 
   @IsOptional()
+  @MinLength(1)
   @IsString()
   @ApiPropertyOptional({
     description: '전화번호',
@@ -39,6 +50,7 @@ export class UpdateMemberPayload {
   phone?: string | null;
 
   @IsOptional()
+  @MinLength(1)
   @IsString()
   @ApiPropertyOptional({ description: '주소', nullable: true, type: String })
   address?: string | null;

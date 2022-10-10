@@ -1,13 +1,15 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDefined, IsString, Length, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginPayload {
-  @IsNotEmpty()
+  @IsDefined()
+  @Length(10, 10)
   @IsString()
   @ApiProperty({ type: String, description: '학번' })
   studentId!: string;
 
-  @IsNotEmpty()
+  @IsDefined()
+  @MinLength(1)
   @IsString()
   @ApiProperty({ type: String, description: '비밀번호' })
   password!: string;
