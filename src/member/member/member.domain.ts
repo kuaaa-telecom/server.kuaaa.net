@@ -50,8 +50,10 @@ export class MemberDomain {
     return new MemberDomain(this.memberRepository, updatedData);
   }
 
-  // 이후 auth 추가되면, auth가 있는 경우는 어떻게 할지 정책을 정해야 할 필요가 있음.
+  // 다른 테이블에 데이터 쌓이면?
   async deleteMember(): Promise<void> {
+    const isAccountExist = await this.memberRepository.isAccountExist(this.id);
+    if (isAccountExist) throw new ConflictException('계정이 존재합니다.');
     await this.memberRepository.deleteMember(this.id);
   }
 
