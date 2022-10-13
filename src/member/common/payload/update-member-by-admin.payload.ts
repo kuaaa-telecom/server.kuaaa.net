@@ -2,7 +2,6 @@ import {
   IsDate,
   IsEnum,
   IsInt,
-  IsOptional,
   IsString,
   Length,
   MinLength,
@@ -42,26 +41,4 @@ export class UpdateMemberByAdminPayload {
     enum: MemberType,
   })
   type?: MemberType;
-
-  @IsOptional()
-  @MinLength(1)
-  @IsString()
-  @ApiPropertyOptional({ description: '이메일', nullable: true, type: String })
-  email?: string | null;
-
-  @IsOptional()
-  @MinLength(1)
-  @IsString()
-  @ApiPropertyOptional({
-    description: '전화번호',
-    nullable: true,
-    type: String,
-  })
-  phone?: string | null;
-
-  @IsOptional()
-  @MinLength(1)
-  @IsString()
-  @ApiPropertyOptional({ description: '주소', nullable: true, type: String })
-  address?: string | null;
 }

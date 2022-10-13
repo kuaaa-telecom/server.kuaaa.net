@@ -7,6 +7,7 @@ import { MemberData } from './type/member-data.type';
 import { MemberDataWithMajor } from './type/member-data-with-major.type';
 import { MajorData } from './type/major-data.type';
 import { UpdateMemberData } from './type/update-member-data.type';
+import { CreateMemberData } from './type/create-member-data.type';
 
 const MEMBER_DATA_SELECT = {
   id: true,
@@ -73,9 +74,6 @@ export class MemberRepository implements IMemberRepository {
       generation: Number(member.studentId.slice(2, 4)),
       majorId: member.majorId,
       registeredAt: member.registeredAt,
-      email: member.email ?? null,
-      phone: member.phone ?? null,
-      address: member.address ?? null,
     }));
 
     // 한 transaction으로 처리

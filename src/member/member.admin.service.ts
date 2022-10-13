@@ -27,9 +27,6 @@ export class MemberAdminService {
       studentId: payload.studentId,
       registeredAt: payload.registeredAt,
       majorId: payload.majorId,
-      email: payload.email,
-      phone: payload.phone,
-      address: payload.address,
     };
     await member.updateMember(updateData);
   }
