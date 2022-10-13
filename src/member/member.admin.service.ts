@@ -6,7 +6,7 @@ import { MemberFactory } from './member/member.factory';
 import { Member } from './member/member.entity';
 
 @Injectable()
-export class MemberService {
+export class MemberAdminService {
   constructor(private readonly memberFactory: MemberFactory) {}
 
   async createMembers(payload: CreateMembersPayload): Promise<CreateResultDto> {

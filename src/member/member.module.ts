@@ -1,6 +1,6 @@
 import { ClassProvider, Module } from '@nestjs/common';
-import { MemberService } from './member.service';
-import { MemberController } from './member.controller';
+import { MemberAdminService } from './member.admin.service';
+import { MemberAdminController } from './member.admin.controller';
 import { MemberFactory } from './member/member.factory';
 import { MemberRepository } from './member/member.repository';
 
@@ -10,7 +10,7 @@ const memberRepository: ClassProvider = {
 };
 
 @Module({
-  providers: [MemberService, MemberFactory, memberRepository],
-  controllers: [MemberController],
+  providers: [MemberAdminService, MemberFactory, memberRepository],
+  controllers: [MemberAdminController],
 })
 export class MemberModule {}

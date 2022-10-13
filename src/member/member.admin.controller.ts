@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { MemberService } from './member.service';
+import { MemberAdminService } from './member.admin.service';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -25,10 +25,10 @@ import { RoleGuard } from '../auth/common/guard/role.gard';
 import { MemberType } from '@prisma/client';
 import { Roles } from '../auth/common/decorator/role.decorator';
 
-@ApiTags('Member API')
-@Controller('api/members')
-export class MemberController {
-  constructor(private readonly memberService: MemberService) {}
+@ApiTags('Member Admin API')
+@Controller('api/admin/members')
+export class MemberAdminController {
+  constructor(private readonly memberService: MemberAdminService) {}
 
   // 테스트용 계정 등록을 위해 인증, 인가 전부 잠시 열어둡니다.
   @Post()
