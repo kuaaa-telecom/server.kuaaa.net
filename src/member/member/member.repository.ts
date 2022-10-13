@@ -19,6 +19,11 @@ const MEMBER_DATA_SELECT = {
   email: true,
   phone: true,
   address: true,
+  memberAccount: {
+    select: {
+      nickname: true,
+    },
+  },
 };
 
 @Injectable()
@@ -38,6 +43,11 @@ export class MemberRepository implements IMemberRepository {
         registeredAt: true,
         address: true,
         generation: true,
+        memberAccount: {
+          select: {
+            nickname: true,
+          },
+        },
         major: {
           select: {
             id: true,

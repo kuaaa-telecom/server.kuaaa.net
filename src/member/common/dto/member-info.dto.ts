@@ -32,6 +32,9 @@ export class MemberInfoDto {
   @ApiProperty({ type: String, nullable: true })
   address!: string | null;
 
+  @ApiProperty({ type: String, nullable: true })
+  nickname!: string | null;
+
   @ApiProperty({ type: MajorInfoDto })
   major!: MajorInfoDto;
 
@@ -45,6 +48,7 @@ export class MemberInfoDto {
       email: member.email,
       phone: member.phone,
       address: member.address,
+      nickname: member.nickname,
       major: {
         name: major.name,
         college: major.college,

@@ -18,6 +18,7 @@ export class Member {
   email!: string | null;
   phone!: string | null;
   address!: string | null;
+  nickname!: string | null;
   majorId!: number;
   private major?: Major;
 
@@ -35,6 +36,7 @@ export class Member {
     this.phone = data.phone;
     this.address = data.address;
     this.majorId = data.major.id;
+    this.nickname = data.nickname;
 
     // major에 MajorData를 담으면 key가 1개보다는 많음 => eager loading
     if (Object.keys(data.major).length > 1) {
@@ -68,6 +70,7 @@ export class Member {
       email: updatedData.email,
       phone: updatedData.phone,
       address: updatedData.address,
+      nickname: updatedData.memberAccount?.nickname ?? null,
       major: { id: updatedData.majorId },
     };
 

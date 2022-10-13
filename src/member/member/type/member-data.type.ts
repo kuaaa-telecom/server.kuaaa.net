@@ -11,4 +11,7 @@ export type MemberData = {
   phone: string | null;
   address: string | null;
   majorId: number;
+  memberAccount: {
+    nickname: string;
+  } | null;
 };

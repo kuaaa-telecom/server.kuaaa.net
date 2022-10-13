@@ -11,5 +11,8 @@ export type MemberDataWithMajor = {
   email: string | null;
   phone: string | null;
   address: string | null;
+  memberAccount: {
+    nickname: string;
+  } | null;
   major: MajorData;
 };

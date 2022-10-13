@@ -38,6 +38,7 @@ export class MemberFactory {
       email: memberData.email,
       phone: memberData.phone,
       address: memberData.address,
+      nickname: memberData.memberAccount?.nickname ?? null,
       major: {
         id: memberData.major.id,
         name: memberData.major.name,
@@ -84,6 +85,7 @@ export class MemberFactory {
         email: memberData.email,
         phone: memberData.phone,
         address: memberData.address,
+        nickname: memberData.memberAccount?.nickname ?? null,
         major: {
           id: memberData.majorId,
         },
