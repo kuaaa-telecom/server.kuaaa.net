@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsEnum,
   IsInt,
   IsOptional,
   IsString,
@@ -8,6 +9,7 @@ import {
 } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
+import { MemberType } from '@prisma/client';
 
 export class UpdateMemberPayload {
   @MinLength(1)
@@ -32,6 +34,14 @@ export class UpdateMemberPayload {
     example: '2021-01-01',
   })
   registeredAt?: Date;
+
+  @IsEnum(MemberType)
+  @ApiPropertyOptional({
+    description: '회원권한',
+    type: String,
+    enum: MemberType,
+  })
+  type?: MemberType;
 
   @IsOptional()
   @MinLength(1)

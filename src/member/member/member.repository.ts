@@ -106,6 +106,7 @@ export class MemberRepository implements IMemberRepository {
           ? Number(data.studentId.slice(2, 4))
           : undefined,
         majorId: data.majorId,
+        type: data.type,
         registeredAt: data.registeredAt,
         email: data.email,
         phone: data.phone,
