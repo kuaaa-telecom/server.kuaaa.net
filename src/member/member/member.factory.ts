@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateMembersPayload } from '../common/payload/create-members.payload';
-import { MemberDomain } from './member.domain';
+import { Member } from './member.entity';
 import { IMemberRepository } from './interface/member.repository.interface';
 import { MemberDomainData } from './type/member-domain-data.type';
 import * as _ from 'lodash';
@@ -18,7 +18,7 @@ export class MemberFactory {
     private readonly memberRepository: IMemberRepository,
   ) {}
 
-  async getMemberById(memberId: string): Promise<MemberDomain> {
+  async getMemberById(memberId: string): Promise<Member> {
     const memberData: MemberDomainData | null =
       await this.memberRepository.getMemberById(memberId);
 
@@ -26,10 +26,10 @@ export class MemberFactory {
       throw new NotFoundException(`Member Id: ${memberId}를 찾을 수 없습니다.`);
     }
 
-    return new MemberDomain(this.memberRepository, memberData);
+    return new Member(this.memberRepository, memberData);
   }
 
-  async createMembers(data: CreateMembersPayload): Promise<MemberDomain[]> {
+  async createMembers(data: CreateMembersPayload): Promise<Member[]> {
     // 학번 중복 체크
     const memberStudentIds = data.members.map(({ studentId }) => studentId);
     if (_.uniq(memberStudentIds).length !== memberStudentIds.length)
@@ -54,7 +54,7 @@ export class MemberFactory {
         ({ studentId: id }) => id === studentId,
       )!;
 
-      return new MemberDomain(this.memberRepository, memberData);
+      return new Member(this.memberRepository, memberData);
     });
   }
 }

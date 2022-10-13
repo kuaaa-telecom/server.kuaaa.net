@@ -5,7 +5,7 @@ import { LoginPayload } from './common/payload/login.payload';
 import { AccountFactory } from './account/account.factory';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { AccountDomain } from './account/account.domain';
+import { Account } from './account/account.entity';
 
 @Injectable()
 export class AuthService {
@@ -16,16 +16,15 @@ export class AuthService {
   ) {}
 
   async signUp(payload: SignupPayload): Promise<TokenDto> {
-    const account: AccountDomain = await this.accountFactory.createAccount(
-      payload,
-    );
+    const account: Account = await this.accountFactory.createAccount(payload);
     const token = await this.createAccessToken(account.memberId);
     return { accessToken: token };
   }
 
   async login(payload: LoginPayload): Promise<TokenDto> {
-    const account: AccountDomain =
-      await this.accountFactory.getAccountByStudentId(payload.studentId);
+    const account: Account = await this.accountFactory.getAccountByStudentId(
+      payload.studentId,
+    );
 
     const loginResult = await account.login(payload.password);
     if (!loginResult) {

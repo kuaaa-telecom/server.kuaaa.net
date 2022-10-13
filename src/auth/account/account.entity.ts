@@ -1,7 +1,7 @@
 import { AccountDomainData } from './type/account-domain-data.type';
 import { MemberType } from '@prisma/client';
 
-export class AccountDomain {
+export class Account {
   memberId!: string;
   studentId!: string;
   password!: string;

@@ -3,16 +3,14 @@ import { CreateMembersPayload } from './common/payload/create-members.payload';
 import { CreateResultDto } from './common/dto/create-result.dto';
 import { UpdateMemberPayload } from './common/payload/update-member.payload';
 import { MemberFactory } from './member/member.factory';
-import { MemberDomain } from './member/member.domain';
+import { Member } from './member/member.entity';
 
 @Injectable()
 export class MemberService {
   constructor(private readonly memberFactory: MemberFactory) {}
 
   async createMembers(payload: CreateMembersPayload): Promise<CreateResultDto> {
-    const members: MemberDomain[] = await this.memberFactory.createMembers(
-      payload,
-    );
+    const members: Member[] = await this.memberFactory.createMembers(payload);
     return { memberIds: members.map((member) => member.id) };
   }
 

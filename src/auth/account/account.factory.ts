@@ -1,5 +1,5 @@
 import { SignupPayload } from '../common/payload/signup.payload';
-import { AccountDomain } from './account.domain';
+import { Account } from './account.entity';
 import {
   ConflictException,
   Inject,
@@ -19,7 +19,7 @@ export class AccountFactory {
     private readonly passwordService: IPasswordService,
   ) {}
 
-  async getAccountByMemberId(memberId: string): Promise<AccountDomain | null> {
+  async getAccountByMemberId(memberId: string): Promise<Account | null> {
     const accountData: AccountDomainData | null =
       await this.accountRepository.getAccountByMemberId(memberId);
 
@@ -27,10 +27,10 @@ export class AccountFactory {
       return null;
     }
 
-    return new AccountDomain(this.passwordService, accountData);
+    return new Account(this.passwordService, accountData);
   }
 
-  async getAccountByStudentId(studentId: string): Promise<AccountDomain> {
+  async getAccountByStudentId(studentId: string): Promise<Account> {
     const accountData: AccountDomainData | null =
       await this.accountRepository.getAccountByStudentId(studentId);
 
@@ -38,10 +38,10 @@ export class AccountFactory {
       throw new NotFoundException('해당 학번의 계정이 존재하지 않습니다.');
     }
 
-    return new AccountDomain(this.passwordService, accountData);
+    return new Account(this.passwordService, accountData);
   }
 
-  async createAccount(data: SignupPayload): Promise<AccountDomain> {
+  async createAccount(data: SignupPayload): Promise<Account> {
     // 학번, 이름으로 validation => memberId 가져옴
     const memberId: string | null =
       await this.accountRepository.getMemberIdByStudentIdAndName(
@@ -78,6 +78,6 @@ export class AccountFactory {
     const accountData: AccountDomainData =
       await this.accountRepository.createAccount(memberId, createAccountData);
 
-    return new AccountDomain(this.passwordService, accountData);
+    return new Account(this.passwordService, accountData);
   }
 }

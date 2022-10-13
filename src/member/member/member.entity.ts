@@ -4,7 +4,7 @@ import { IMemberRepository } from './interface/member.repository.interface';
 import { UpdateMemberPayload } from '../common/payload/update-member.payload';
 import { ConflictException } from '@nestjs/common';
 
-export class MemberDomain {
+export class Member {
   id!: string;
   name!: string;
   type!: MemberType;
@@ -33,7 +33,7 @@ export class MemberDomain {
   }
 
   // 나중에 다른 엔드포인트로 접근하는 경우 UpdateMemberPayload를 그대로 쓰는게 아니라 새로운 type을 만들어야 할듯.
-  async updateMember(data: UpdateMemberPayload): Promise<MemberDomain> {
+  async updateMember(data: UpdateMemberPayload): Promise<Member> {
     if (data.studentId) {
       await this.validateStudentId(data.studentId);
     }
@@ -47,7 +47,7 @@ export class MemberDomain {
       await this.memberRepository.updateMember(this.id, data);
 
     // 업데이트한 데이터로 domain을 새로 만들어서 반환
-    return new MemberDomain(this.memberRepository, updatedData);
+    return new Member(this.memberRepository, updatedData);
   }
 
   // 다른 테이블에 데이터 쌓이면?
