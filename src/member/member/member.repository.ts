@@ -2,11 +2,11 @@ import { IMemberRepository } from './interface/member.repository.interface';
 import { PrismaService } from '../../common/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { UpdateMemberPayload } from '../common/payload/update-member.payload';
 import { CreateMemberPayload } from '../common/payload/create-members.payload';
 import { MemberData } from './type/member-data.type';
 import { MemberDataWithMajor } from './type/member-data-with-major.type';
 import { MajorData } from './type/major-data.type';
+import { UpdateMemberData } from './type/update-member-data.type';
 
 const MEMBER_DATA_SELECT = {
   id: true,
@@ -93,10 +93,7 @@ export class MemberRepository implements IMemberRepository {
     });
   }
 
-  async updateMember(
-    id: string,
-    data: UpdateMemberPayload,
-  ): Promise<MemberData> {
+  async updateMember(id: string, data: UpdateMemberData): Promise<MemberData> {
     return this.prisma.member.update({
       where: { id },
       data: {
@@ -111,6 +108,11 @@ export class MemberRepository implements IMemberRepository {
         email: data.email,
         phone: data.phone,
         address: data.address,
+        memberAccount: {
+          update: {
+            nickname: data.nickname,
+          },
+        },
       },
       select: MEMBER_DATA_SELECT,
     });

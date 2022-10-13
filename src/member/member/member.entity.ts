@@ -2,11 +2,11 @@ import { MemberType } from '@prisma/client';
 import { MemberInput } from './type/member-input.type';
 import { MajorInput } from './type/major-input.type';
 import { IMemberRepository } from './interface/member.repository.interface';
-import { UpdateMemberPayload } from '../common/payload/update-member.payload';
 import { ConflictException } from '@nestjs/common';
 import { Major } from './major.entity';
 import { MemberData } from './type/member-data.type';
 import { MajorData } from './type/major-data.type';
+import { UpdateMemberData } from './type/update-member-data.type';
 
 export class Member {
   id!: string;
@@ -45,7 +45,7 @@ export class Member {
   }
 
   // 나중에 다른 엔드포인트로 접근하는 경우 UpdateMemberPayload를 그대로 쓰는게 아니라 새로운 type을 만들어야 할듯.
-  async updateMember(data: UpdateMemberPayload): Promise<Member> {
+  async updateMember(data: UpdateMemberData): Promise<Member> {
     if (data.studentId) {
       await this.validateStudentId(data.studentId);
     }
