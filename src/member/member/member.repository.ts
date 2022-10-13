@@ -1,12 +1,14 @@
 import { IMemberRepository } from './interface/member.repository.interface';
 import { PrismaService } from '../../common/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { MemberDomainData } from './type/member-domain-data.type';
-import { Major, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { UpdateMemberPayload } from '../common/payload/update-member.payload';
 import { CreateMemberPayload } from '../common/payload/create-members.payload';
+import { MemberData } from './type/member-data.type';
+import { MemberDataWithMajor } from './type/member-data-with-major.type';
+import { MajorData } from './type/major-data.type';
 
-const memberDomainDataSelect = {
+const MEMBER_DATA_SELECT = {
   id: true,
   name: true,
   type: true,
@@ -23,25 +25,38 @@ const memberDomainDataSelect = {
 export class MemberRepository implements IMemberRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMemberById(id: string): Promise<MemberDomainData | null> {
+  async getMemberById(id: string): Promise<MemberDataWithMajor | null> {
     return this.prisma.member.findFirst({
       where: { id },
-      select: memberDomainDataSelect,
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        studentId: true,
+        phone: true,
+        email: true,
+        registeredAt: true,
+        address: true,
+        generation: true,
+        major: {
+          select: {
+            id: true,
+            name: true,
+            college: true,
+          },
+        },
+      },
     });
   }
 
-  async getMemberByStudentId(
-    studentId: string,
-  ): Promise<MemberDomainData | null> {
+  async getMemberByStudentId(studentId: string): Promise<MemberData | null> {
     return this.prisma.member.findFirst({
       where: { studentId },
-      select: memberDomainDataSelect,
+      select: MEMBER_DATA_SELECT,
     });
   }
 
-  async createMembers(
-    data: CreateMemberPayload[],
-  ): Promise<MemberDomainData[]> {
+  async createMembers(data: CreateMemberPayload[]): Promise<MemberData[]> {
     const memberInputs: CreateMemberData[] = data.map((member) => ({
       name: member.name,
       studentId: member.studentId,
@@ -55,11 +70,11 @@ export class MemberRepository implements IMemberRepository {
 
     // 한 transaction으로 처리
     return this.prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const members: MemberDomainData[] = [];
+      const members: MemberData[] = [];
       for await (const input of memberInputs) {
-        const member: MemberDomainData = await tx.member.create({
+        const member: MemberData = await tx.member.create({
           data: input,
-          select: memberDomainDataSelect,
+          select: MEMBER_DATA_SELECT,
         });
         members.push(member);
       }
@@ -71,7 +86,7 @@ export class MemberRepository implements IMemberRepository {
   async updateMember(
     id: string,
     data: UpdateMemberPayload,
-  ): Promise<MemberDomainData> {
+  ): Promise<MemberData> {
     return this.prisma.member.update({
       where: { id },
       data: {
@@ -86,7 +101,7 @@ export class MemberRepository implements IMemberRepository {
         phone: data.phone,
         address: data.address,
       },
-      select: memberDomainDataSelect,
+      select: MEMBER_DATA_SELECT,
     });
   }
 
@@ -96,7 +111,7 @@ export class MemberRepository implements IMemberRepository {
     });
   }
 
-  async getMajor(majorId: number): Promise<Major | null> {
+  async getMajor(majorId: number): Promise<MajorData | null> {
     return this.prisma.major.findUnique({
       where: { id: majorId },
     });

@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Member } from '../../member/member.entity';
+import { Major } from '../../member/major.entity';
 
 class MajorInfoDto {
   @ApiProperty({ type: String })
@@ -16,7 +18,7 @@ export class MemberInfoDto {
   studentId!: string;
 
   @ApiProperty({ type: String })
-  registeredAt!: Date;
+  registeredAt!: string;
 
   @ApiProperty({ type: Number })
   generation!: number;
@@ -32,4 +34,21 @@ export class MemberInfoDto {
 
   @ApiProperty({ type: MajorInfoDto })
   major!: MajorInfoDto;
+
+  static async of(member: Member): Promise<MemberInfoDto> {
+    const major: Major = await member.getMajor();
+    return {
+      name: member.name,
+      studentId: member.studentId,
+      registeredAt: member.registeredAt.toISOString().split('T')[0],
+      generation: member.generation,
+      email: member.email,
+      phone: member.phone,
+      address: member.address,
+      major: {
+        name: major.name,
+        college: major.college,
+      },
+    };
+  }
 }

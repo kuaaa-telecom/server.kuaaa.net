@@ -8,8 +8,10 @@ import {
 import { CreateMembersPayload } from '../common/payload/create-members.payload';
 import { Member } from './member.entity';
 import { IMemberRepository } from './interface/member.repository.interface';
-import { MemberDomainData } from './type/member-domain-data.type';
+import { MemberInput } from './type/member-input.type';
 import * as _ from 'lodash';
+import { MemberData } from './type/member-data.type';
+import { MemberDataWithMajor } from './type/member-data-with-major.type';
 
 @Injectable()
 export class MemberFactory {
@@ -19,14 +21,31 @@ export class MemberFactory {
   ) {}
 
   async getMemberById(memberId: string): Promise<Member> {
-    const memberData: MemberDomainData | null =
+    const memberData: MemberDataWithMajor | null =
       await this.memberRepository.getMemberById(memberId);
 
     if (!memberData) {
       throw new NotFoundException(`Member Id: ${memberId}를 찾을 수 없습니다.`);
     }
 
-    return new Member(this.memberRepository, memberData);
+    const memberInput: MemberInput = {
+      id: memberData.id,
+      name: memberData.name,
+      type: memberData.type,
+      studentId: memberData.studentId,
+      generation: memberData.generation,
+      registeredAt: memberData.registeredAt,
+      email: memberData.email,
+      phone: memberData.phone,
+      address: memberData.address,
+      major: {
+        id: memberData.major.id,
+        name: memberData.major.name,
+        college: memberData.major.college,
+      },
+    };
+
+    return new Member(this.memberRepository, memberInput);
   }
 
   async createMembers(data: CreateMembersPayload): Promise<Member[]> {
@@ -45,16 +64,32 @@ export class MemberFactory {
       );
     }
 
-    const membersData: MemberDomainData[] =
-      await this.memberRepository.createMembers(data.members);
+    const membersData: MemberData[] = await this.memberRepository.createMembers(
+      data.members,
+    );
 
     // 요청했던 studentId 순서대로 반환
     return memberStudentIds.map((studentId) => {
-      const memberData: MemberDomainData = membersData.find(
+      const memberData: MemberData = membersData.find(
         ({ studentId: id }) => id === studentId,
       )!;
 
-      return new Member(this.memberRepository, memberData);
+      const memberInput: MemberInput = {
+        id: memberData.id,
+        name: memberData.name,
+        type: memberData.type,
+        studentId: memberData.studentId,
+        generation: memberData.generation,
+        registeredAt: memberData.registeredAt,
+        email: memberData.email,
+        phone: memberData.phone,
+        address: memberData.address,
+        major: {
+          id: memberData.majorId,
+        },
+      };
+
+      return new Member(this.memberRepository, memberInput);
     });
   }
 }
