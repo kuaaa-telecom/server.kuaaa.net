@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMembersPayload } from './common/payload/create-members.payload';
 import { CreateResultDto } from './common/dto/create-result.dto';
-import { UpdateMemberPayload } from './common/payload/update-member.payload';
+import { UpdateMemberByAdminPayload } from './common/payload/update-member-by-admin.payload';
 import { MemberFactory } from './member/member.factory';
 import { Member } from './member/member.entity';
+import { UpdateMemberData } from './member/type/update-member-data.type';
 
 @Injectable()
 export class MemberAdminService {
@@ -14,9 +15,20 @@ export class MemberAdminService {
     return { memberIds: members.map((member) => member.id) };
   }
 
-  async updateMember(id: string, payload: UpdateMemberPayload): Promise<void> {
+  async updateMember(
+    id: string,
+    payload: UpdateMemberByAdminPayload,
+  ): Promise<void> {
     const member = await this.memberFactory.getMemberById(id);
-    await member.updateMember(payload);
+
+    const updateData: UpdateMemberData = {
+      name: payload.name,
+      type: payload.type,
+      studentId: payload.studentId,
+      registeredAt: payload.registeredAt,
+      majorId: payload.majorId,
+    };
+    await member.updateMember(updateData);
   }
 
   async deleteMember(id: string): Promise<void> {

@@ -1,14 +1,17 @@
 import { MemberType } from '@prisma/client';
 
-export type MemberDomainData = {
+export type MemberData = {
   id: string;
   name: string;
   type: MemberType;
   studentId: string;
   generation: number;
-  majorId: number;
   registeredAt: Date;
   email: string | null;
   phone: string | null;
   address: string | null;
+  majorId: number;
+  memberAccount: {
+    nickname: string;
+  } | null;
 };

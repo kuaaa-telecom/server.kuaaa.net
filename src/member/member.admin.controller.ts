@@ -19,7 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateResultDto } from './common/dto/create-result.dto';
 import { CreateMembersPayload } from './common/payload/create-members.payload';
-import { UpdateMemberPayload } from './common/payload/update-member.payload';
+import { UpdateMemberByAdminPayload } from './common/payload/update-member-by-admin.payload';
 import { JwtAuthGuard } from '../auth/common/guard/jwt-auth.guard';
 import { RoleGuard } from '../auth/common/guard/role.gard';
 import { MemberType } from '@prisma/client';
@@ -50,7 +50,7 @@ export class MemberAdminController {
   @ApiNoContentResponse()
   async updateMember(
     @Param('memberId', ParseUUIDPipe) id: string,
-    @Body() payload: UpdateMemberPayload,
+    @Body() payload: UpdateMemberByAdminPayload,
   ): Promise<void> {
     await this.memberService.updateMember(id, payload);
   }
