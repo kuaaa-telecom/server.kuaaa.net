@@ -112,4 +112,12 @@ export class MemberRepository implements IMemberRepository {
 
     return duplicatedStudentIds.map(({ studentId }) => studentId);
   }
+
+  async isAccountExist(id: string): Promise<boolean> {
+    const account = await this.prisma.memberAccount.findUnique({
+      where: { memberId: id },
+    });
+
+    return Boolean(account);
+  }
 }

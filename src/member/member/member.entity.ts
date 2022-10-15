@@ -4,7 +4,7 @@ import { IMemberRepository } from './interface/member.repository.interface';
 import { UpdateMemberPayload } from '../common/payload/update-member.payload';
 import { ConflictException } from '@nestjs/common';
 
-export class MemberDomain {
+export class Member {
   id!: string;
   name!: string;
   type!: MemberType;
@@ -33,7 +33,7 @@ export class MemberDomain {
   }
 
   // 나중에 다른 엔드포인트로 접근하는 경우 UpdateMemberPayload를 그대로 쓰는게 아니라 새로운 type을 만들어야 할듯.
-  async updateMember(data: UpdateMemberPayload): Promise<MemberDomain> {
+  async updateMember(data: UpdateMemberPayload): Promise<Member> {
     if (data.studentId) {
       await this.validateStudentId(data.studentId);
     }
@@ -47,11 +47,13 @@ export class MemberDomain {
       await this.memberRepository.updateMember(this.id, data);
 
     // 업데이트한 데이터로 domain을 새로 만들어서 반환
-    return new MemberDomain(this.memberRepository, updatedData);
+    return new Member(this.memberRepository, updatedData);
   }
 
-  // 이후 auth 추가되면, auth가 있는 경우는 어떻게 할지 정책을 정해야 할 필요가 있음.
+  // 다른 테이블에 데이터 쌓이면?
   async deleteMember(): Promise<void> {
+    const isAccountExist = await this.memberRepository.isAccountExist(this.id);
+    if (isAccountExist) throw new ConflictException('계정이 존재합니다.');
     await this.memberRepository.deleteMember(this.id);
   }
 

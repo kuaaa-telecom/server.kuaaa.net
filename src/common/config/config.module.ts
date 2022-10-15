@@ -8,5 +8,7 @@ export const configModule = ConfigModule.forRoot({
   validationSchema: Joi.object({
     NODE_ENV: Joi.string().valid('dev', 'local'),
     DATABASE_URL: Joi.string().required(),
+    JWT_ACCESS_TOKEN_KEY: Joi.string().required(),
+    JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
   }),
 });
